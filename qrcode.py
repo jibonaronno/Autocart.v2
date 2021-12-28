@@ -24,6 +24,10 @@ class QRCode(object):
 	</svg>
 	""".format(qr.get_size() + border * 2, " ".join(parts))
 
+	def genQrFromNow(self):
+		strdate = datetime.today().strftime('%m%d%Y%H%M%S')
+		return strdate
+
 	def genSvgFile(self, strcode:str):
 		# Simple operation
 		qr0 = QrCode.encode_text(strcode, QrCode.Ecc.MEDIUM)

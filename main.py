@@ -21,6 +21,7 @@ import qtmodern.styles
 import qtmodern.windows
 from qrcode import QRCode
 from mqttlisten import MqttListen
+from crud import CRUD
 
 _UI = join(dirname(abspath(__file__)), 'mainwindow.ui')
 
@@ -29,8 +30,12 @@ class MainWindow(QMainWindow, QWidget):
         QMainWindow.__init__(self)
         self.widget = uic.loadUi(_UI, self)
         qcode = QRCode()
-        qcode.genSvgFile("013012155011")
+        qcode.genSvgFile(qcode.genQrFromNow()) #("013012155011")
+        print(qcode.genQrFromNow())
         self.repaint()
+        self.db = CRUD("flow.db")
+        self.db.openDBHard()
+
         mqtt = MqttListen()
         mqtt.Subscribe()
 
