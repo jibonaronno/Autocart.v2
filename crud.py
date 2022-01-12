@@ -2,12 +2,14 @@ import sqlite3
 from sqlite3 import Error
 from os.path import join, dirname, abspath
 from PyQt5.QtCore import QDateTime
+from collections import deque
 
 dbfile = join(dirname(abspath(__file__)), 'autocart.db')
 
 class CRUD(object):
     def __init__(self, filename):
         self.filename = filename
+        self.OrderStack = deque()
         print(dbfile)
 
     def openDB(self, filename):
@@ -29,8 +31,43 @@ class CRUD(object):
         self.con.commit()
         return cur.lastrowid
 
-    def tokenExist(self):
-        pass
+    def inventoryItemExist(self, barcode:str):
+        if barcode:
+            sql = "SELECT * FROM inventory WHERE barcode='" + barcode + "'"
+            cur = self.con.cursor()
+            cur.execute(sql)
+            rows = cur.fetchall()
+            if len(rows) > 0:
+                print(rows[0][1])
+                return (3, rows[0][1]) # data exist
+            else:
+                return (0, "") # data not exist
+        return (1, "") # parameter error
+
+    def inventoryGetItem(self, barcode:str):
+        if barcode:
+            sql = "SELECT * FROM inventory WHERE barcode='" + barcode + "'"
+            cur = self.con.cursor()
+            cur.execute(sql)
+            rows = cur.fetchall()
+            if len(rows) > 0:
+                return rows
+        return None
+
+    def tokenExist(self, token:str):
+        if token:
+            sql = "SELECT * FROM tokens WHERE token='" + token + "'"
+            cur = self.con.cursor()
+            cur.execute(sql)
+            rows = cur.fetchall()
+            if len(rows) > 0:
+                if rows[0][3] == "":
+                    return 2
+                else:
+                    return 3
+            else:
+                return 0
+        return 1
 
     def updateToken(self):
         pass
