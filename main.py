@@ -7,6 +7,14 @@
 REFS
 QLineEdit Reference
 https://www.tutorialspoint.com/pyqt/pyqt_qlineedit_widget.htm
+
+Linux Installation
+sudo apt install python3-pyqt5
+sudo apt install python3-pyqtgraph
+sudo python3 -m pip install qtmodern
+sudo python3 -m pip install qrcodegen
+sudo python3 -m pip install paho-mqtt
+sudo python3 -m pip install hx711
 '''
 
 import sys
@@ -29,8 +37,17 @@ from qrcode import QRCode
 from mqttlisten import MqttListen
 from crud import CRUD
 from datetime import datetime
+from loadcell import LoadCell
 
 _UI = join(dirname(abspath(__file__)), 'mainwindow.ui')
+
+RPi = False
+try:
+    import RPi.GPIO as GPIO
+    from hx711 import HX711
+    RPi=True
+except:
+    print("GPIO Platform Missmatch")
 
 class Object(object):
     pass
@@ -39,6 +56,7 @@ class MainWindow(QMainWindow, QWidget):
     def __init__(self):
         QMainWindow.__init__(self)
         self.widget = uic.loadUi(_UI, self)
+        self.loadcell = LoadCell()
         qcode = QRCode()
         qrtext = qcode.genQrFromNow()
         qcode.genSvgFile(qrtext) #("013012155011")
@@ -68,6 +86,17 @@ class MainWindow(QMainWindow, QWidget):
         self.objItems.token = ""
         self.objItems.items = []
 
+        self.hx711 = None
+        self.measures = 0
+
+        if RPi:
+            try:
+                self.hx711 = HX711(dout_pin=5, pd_sck_pin=6, channel='A', gain=64)
+                self.hx711.reset()  # Before we start, reset the HX711 (not obligate)
+                self.measures = self.hx711.get_raw_data(num_measures=3)
+            finally:
+                GPIO.cleanup()  # always do a GPIO cleanup in your scripts!
+
     def addItem(self):
         txt = self.barcodeEdit.text()
         te, itm = self.db.inventoryItemExist(txt)
@@ -91,6 +120,7 @@ class MainWindow(QMainWindow, QWidget):
                 self.tableWidget.setItem(ridx, 5, QTableWidgetItem(str(1)))
                 self.tableWidget.setItem(ridx, 6, QTableWidgetItem(str(roww[5])))
                 ridx += 1
+            self.loadcell.show()
 
 
     def findToken(self):
