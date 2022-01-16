@@ -22,9 +22,9 @@
   <widget class="QLCDNumber" name="lcdNumber">
    <property name="geometry">
     <rect>
-     <x>120</x>
+     <x>40</x>
      <y>80</y>
-     <width>421</width>
+     <width>541</width>
      <height>121</height>
     </rect>
    </property>
@@ -33,6 +33,9 @@
    </property>
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
+   </property>
+   <property name="digitCount">
+    <number>6</number>
    </property>
    <property name="segmentStyle">
     <enum>QLCDNumber::Filled</enum>

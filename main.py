@@ -159,7 +159,7 @@ class MainWindow(QMainWindow, QWidget):
                 msum = 0
                 mavg = 0
                 self.hx711 = HX711(dout_pin=5, pd_sck_pin=6, channel='A', gain=64)
-                self.hx711.reset()  # Before we start, reset the HX711 (not obligate)
+                #self.hx711.reset()  # Before we start, reset the HX711 (not obligate)
                 self.measures = self.hx711.get_raw_data(5)
                 for ms in self.measures:
                     msum = msum + ms
