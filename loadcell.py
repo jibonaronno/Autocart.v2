@@ -1,14 +1,7 @@
 
 from os.path import join, dirname, abspath
-
-import pandas
 from qtpy import uic
-from qtpy.QtCore import Slot, QTimer, QThread, Signal, QObject, Qt
-from PyQt5.QtGui import *
-from PyQt5 import QtCore
 from PyQt5.QtWidgets import *
-from crud import CRUD
-import pandas as pd
 
 _UI3 = join(dirname(abspath(__file__)), 'weight.ui')
 
