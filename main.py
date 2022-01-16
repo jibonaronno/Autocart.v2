@@ -157,7 +157,7 @@ class MainWindow(QMainWindow, QWidget):
                 GPIO.setmode(GPIO.BCM)
                 msum = 0
                 mavg = 0
-                self.measures = self.hx711.get_raw_data(5)
+                #self.measures = self.hx711.get_raw_data(5)
                 for ms in self.measures:
                     msum = msum + ms
                 mavg = msum / 5
