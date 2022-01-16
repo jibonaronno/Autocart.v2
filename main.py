@@ -88,12 +88,15 @@ class MainWindow(QMainWindow, QWidget):
 
         self.hx711 = None
         self.measures = 0
+        self.loadcellTimer = QTimer()
+        self.loadcellTimer.timeout.connect(self.readScale)
+        self.loadcellTimer.setSingleShot(True)
 
         if RPi:
             try:
                 self.hx711 = HX711(dout_pin=5, pd_sck_pin=6, channel='A', gain=64)
                 self.hx711.reset()  # Before we start, reset the HX711 (not obligate)
-                self.measures = self.hx711.get_raw_data(num_measures=3)
+                self.measures = self.hx711.get_raw_data(5)
             finally:
                 GPIO.cleanup()  # always do a GPIO cleanup in your scripts!
 
@@ -120,6 +123,7 @@ class MainWindow(QMainWindow, QWidget):
                 self.tableWidget.setItem(ridx, 5, QTableWidgetItem(str(1)))
                 self.tableWidget.setItem(ridx, 6, QTableWidgetItem(str(roww[5])))
                 ridx += 1
+            self.loadcellTimer.start(1000)
             self.loadcell.show()
 
 
@@ -145,6 +149,19 @@ class MainWindow(QMainWindow, QWidget):
         strdate = datetime.today().strftime('%m-%d-%Y')
         strtime = datetime.today().strftime('%H:%M:%S')
         self.db.addNewToken([strdate, strtime, qrtext, ""])
+
+    def readScale(self):
+        if RPi:
+            try:
+                msum = 0
+                mavg = 0
+                self.measures = self.hx711.get_raw_data(5)
+                for ms in self.measures:
+                    msum = msum + ms
+                mavg = msum / 5
+                self.loadcell.lcdNumber.display(mavg)
+            finally:
+                GPIO.cleanup()  # always do a GPIO cleanup in your scripts!
 
     def paintEvent(self, event:QPaintEvent) -> None:
         qp = QPainter()
