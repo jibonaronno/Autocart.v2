@@ -154,7 +154,7 @@ class MainWindow(QMainWindow, QWidget):
     def readScale(self):
         if RPi:
             try:
-                GPIO.setmode(GPIO.BCM)
+                GPIO.setmode(GPIO.BOARD)
                 msum = 0
                 mavg = 0
                 self.measures = self.hx711.get_raw_data(5)
