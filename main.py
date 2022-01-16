@@ -164,7 +164,11 @@ class MainWindow(QMainWindow, QWidget):
                 for ms in self.measures:
                     msum = msum + ms
                 mavg = msum / 5
-                self.loadcell.lcdNumber.display(mavg)
+                if(mavg > 91600):
+                    mavg = mavg - 91600
+                else:
+                    mavg = 0
+                self.loadcell.lcdNumber.display(mavg/100)
                 print("AVG : " + str(mavg))
             finally:
                 GPIO.cleanup()  # always do a GPIO cleanup in your scripts!
