@@ -15,6 +15,10 @@ sudo python3 -m pip install qtmodern
 sudo python3 -m pip install qrcodegen
 sudo python3 -m pip install paho-mqtt
 sudo python3 -m pip install hx711
+python3 -m pip install pillow
+python3 -m pip install imutils
+python3 -m pip install pyzbar
+python3 -m pip install barcode
 
 HX711 module is loadcell comms library. Its class members are volatile.
 I had to initialize the class everytime when needed to measure the scale.
@@ -33,6 +37,7 @@ from qtpy.QtWidgets import QApplication, QMainWindow, QMessageBox, QAction, QDia
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtGui import QPainter
+from PyQt5 import QtGui
 from PyQt5 import QtCore, QtSvg
 from PyQt5.QtWidgets import QLabel, QLineEdit, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QPushButton, QListWidget, QListWidgetItem
 import qtmodern.styles
@@ -42,6 +47,7 @@ from mqttlisten import MqttListen
 from crud import CRUD
 from datetime import datetime
 from loadcell import LoadCell
+from barscan import Camera
 
 _UI = join(dirname(abspath(__file__)), 'mainwindow.ui')
 
@@ -96,6 +102,8 @@ class MainWindow(QMainWindow, QWidget):
         self.loadcellTimer.timeout.connect(self.readScale)
         self.loadcellTimer.setSingleShot(True)
 
+        self.cam = Camera()
+
         #GPIO.setmode(GPIO.BOARD)
         self.hx711 = HX711(dout_pin=5, pd_sck_pin=6, channel='A', gain=64)
         self.hx711.reset()  # Before we start, reset the HX711 (not obligate)
@@ -141,6 +149,14 @@ class MainWindow(QMainWindow, QWidget):
             self.label02.setText("Passed Token : " + txt)
         elif te == 0:
             self.label02.setText("Token Does Not Exist : " + txt)
+
+    @Slot()
+    def on_btnBarcode_clicked(self):
+        stream = self.cam.start()
+        frame = self.cam.getBarcode(stream)
+        image = QImage(frame, 640, 480)
+        self.pix.setPixmap(QtGui.QPixmap.fromImage(image))
+        pass
 
     @Slot()
     def on_btnNextToken_clicked(self):
