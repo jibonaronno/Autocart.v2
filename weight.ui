@@ -193,6 +193,19 @@
      <string>SCAN BARCODE</string>
     </property>
    </widget>
+   <widget class="QLabel" name="pix">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>350</y>
+      <width>191</width>
+      <height>171</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

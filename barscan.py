@@ -6,7 +6,7 @@ import datetime
 import imutils
 import time
 import cv2
-from barcode import EAN13
+#from barcode import EAN13
 #from barcode.writer import ImageWriter
 
 class Camera(object):
