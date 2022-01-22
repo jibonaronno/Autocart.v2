@@ -15,10 +15,6 @@ sudo python3 -m pip install qtmodern
 sudo python3 -m pip install qrcodegen
 sudo python3 -m pip install paho-mqtt
 sudo python3 -m pip install hx711
-
-HX711 module is loadcell comms library. Its class members are volatile.
-I had to initialize the class everytime when needed to measure the scale.
-check readScale(...) function.
 '''
 
 import sys
