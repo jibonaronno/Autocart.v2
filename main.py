@@ -154,11 +154,10 @@ class MainWindow(QMainWindow, QWidget):
         #stream = self.cam.start()
         #frame = self.cam.getBarcode(stream)
 
-        '''
+
         frame = self.cam.capture()
         image = QImage(frame, 640, 480, QImage.Format_RGB888)
         self.pix.setPixmap(QtGui.QPixmap.fromImage(image))
-        '''
 
         self.cam.Barcode()
 
