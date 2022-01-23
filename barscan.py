@@ -26,11 +26,14 @@ class Camera(QObject):
         try:
             while True:
                 _, frm = self.vid.read()
-                frame = imutils.resize(frm, width=640)
+                frame = imutils.resize(frm, width=1024)
                 image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 barcodes = pyzbar.decode(image)
                 self.img = image
-                self.signal.emit("cropp")
+                if len(barcodes) > 0:
+                    self.signal.emit(str(len(barcodes)))
+                else:
+                    self.signal.emit("")
                 time.sleep(0.5)
         except Exception as e:
             print(str(e))
