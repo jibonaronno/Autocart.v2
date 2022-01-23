@@ -11,11 +11,11 @@ import cv2
 
 class Camera(object):
     global camPtr
+    global vid
     def __init__(self):
         pass
 
     def start(self):
-        camPtr = None
         try:
             #camPtr = VideoStream(usePiCamera=True).start()
             camPtr = VideoStream(src=0).start()
@@ -24,6 +24,22 @@ class Camera(object):
             print("Got Error while opening Camera interface :", err)
             sys.exit()
         return camPtr
+
+    def capture(self):
+        vid = cv2.VideoCapture(0)
+        vid.read()
+        vid.read()
+        vid.read()
+        vid.read()
+        vid.read()
+        vid.read()
+        ret, frame = vid.read()
+        vid.read()
+        vid.read()
+        vid.read()
+        vid.read()
+        vid.release()
+        return frame
 
     def getBarcode(self, camPtr):
         frame = camPtr.read()

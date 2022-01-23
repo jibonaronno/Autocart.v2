@@ -99,7 +99,7 @@ class MainWindow(QMainWindow, QWidget):
         self.loadcellTimer.setSingleShot(True)
 
         self.cam = Camera()
-        self.cam.start()
+        #self.cam.start()
 
         '''
         #GPIO.setmode(GPIO.BOARD)
@@ -151,8 +151,9 @@ class MainWindow(QMainWindow, QWidget):
 
     @Slot()
     def on_btnscan_clicked(self):
-        stream = self.cam.start()
-        frame = self.cam.getBarcode(stream)
+        #stream = self.cam.start()
+        #frame = self.cam.getBarcode(stream)
+        frame = self.cam.capture()
         image = QImage(frame, 640, 480, QImage.Format_RGB888)
         self.pix.setPixmap(QtGui.QPixmap.fromImage(image))
 
