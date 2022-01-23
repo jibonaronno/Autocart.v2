@@ -15,6 +15,10 @@ sudo python3 -m pip install qtmodern
 sudo python3 -m pip install qrcodegen
 sudo python3 -m pip install paho-mqtt
 sudo python3 -m pip install hx711
+
+HX711 module is loadcell comms library. Its class members are volatile.
+I had to initialize the class everytime when needed to measure the scale.
+check readScale(...) function.
 '''
 
 import sys
@@ -92,12 +96,14 @@ class MainWindow(QMainWindow, QWidget):
         self.loadcellTimer.timeout.connect(self.readScale)
         self.loadcellTimer.setSingleShot(True)
 
+        '''
         #GPIO.setmode(GPIO.BOARD)
         self.hx711 = HX711(dout_pin=5, pd_sck_pin=6, channel='A', gain=64)
         self.hx711.reset()  # Before we start, reset the HX711 (not obligate)
         self.measures = self.hx711.get_raw_data(5)
         print(self.measures)
         GPIO.cleanup()  # always do a GPIO cleanup in your scripts!
+        '''
 
     def addItem(self):
         txt = self.barcodeEdit.text()
