@@ -33,6 +33,7 @@ from qtpy.QtWidgets import QApplication, QMainWindow, QMessageBox, QAction, QDia
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtGui import QPainter
+from PyQt5 import QtGui
 from PyQt5 import QtCore, QtSvg
 from PyQt5.QtWidgets import QLabel, QLineEdit, QApplication, QWidget, QVBoxLayout, QHBoxLayout, QGroupBox, QPushButton, QListWidget, QListWidgetItem
 import qtmodern.styles
@@ -42,6 +43,7 @@ from mqttlisten import MqttListen
 from crud import CRUD
 from datetime import datetime
 from loadcell import LoadCell
+from barscan import Camera
 
 _UI = join(dirname(abspath(__file__)), 'mainwindow.ui')
 
@@ -96,6 +98,9 @@ class MainWindow(QMainWindow, QWidget):
         self.loadcellTimer.timeout.connect(self.readScale)
         self.loadcellTimer.setSingleShot(True)
 
+        self.cam = Camera()
+        self.cam.start()
+
         '''
         #GPIO.setmode(GPIO.BOARD)
         self.hx711 = HX711(dout_pin=5, pd_sck_pin=6, channel='A', gain=64)
@@ -143,6 +148,13 @@ class MainWindow(QMainWindow, QWidget):
             self.label02.setText("Passed Token : " + txt)
         elif te == 0:
             self.label02.setText("Token Does Not Exist : " + txt)
+
+    @Slot()
+    def on_btnscan_clicked(self):
+        stream = self.cam.start()
+        frame = self.cam.getBarcode(stream)
+        image = QImage(frame, 640, 480, QImage.Format_RGB888)
+        self.pix.setPixmap(QtGui.QPixmap.fromImage(image))
 
     @Slot()
     def on_btnNextToken_clicked(self):
