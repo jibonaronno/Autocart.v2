@@ -1,6 +1,6 @@
 import os,sys
 from imutils.video import VideoStream
-#from pyzbar import pyzbar
+from pyzbar import pyzbar
 import argparse
 import datetime
 import imutils
