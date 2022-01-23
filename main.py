@@ -152,7 +152,7 @@ class MainWindow(QMainWindow, QWidget):
             self.label02.setText("Token Does Not Exist : " + txt)
 
     def on_cropp(self, stream):
-        print("cropped")
+        #print("cropped")
         frame = self.cam.img
         image = QImage(frame, 640, 480, QImage.Format_RGB888)
         self.pix.setPixmap(QtGui.QPixmap.fromImage(image))
