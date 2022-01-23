@@ -8,29 +8,30 @@ import time
 import cv2
 #from barcode import EAN13
 #from barcode.writer import ImageWriter
-from qtpy.QtCore import Signal, QThread, QObject
+from qtpy.QtCore import Signal, QThread, QObject, Slot
 
 class Camera(QObject):
     global camPtr
     global vid
-    global img
     signal = Signal(str)
     def __init__(self):
         self.vid = cv2.VideoCapture(0)
         self.thread = QThread()
-        self.thread.started.connect(self.loop)
         super().__init__()
+        self.thread.started.connect(self.loop)
+        self.img = None
 
+    @Slot()
     def loop(self):
         try:
             while True:
                 _, frm = self.vid.read()
-                #frame = imutils.resize(frm, width=640)
-                #image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                #barcodes = pyzbar.decode(image)
-                #img = image
-                #self.signal.emit("cropp")
-                time.sleep(500)
+                frame = imutils.resize(frm, width=640)
+                image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                barcodes = pyzbar.decode(image)
+                self.img = image
+                self.signal.emit("cropp")
+                time.sleep(0.5)
         except Exception as e:
             print(str(e))
 

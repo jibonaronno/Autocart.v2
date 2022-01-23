@@ -153,6 +153,9 @@ class MainWindow(QMainWindow, QWidget):
 
     def on_cropp(self, stream):
         print("cropped")
+        frame = self.cam.img
+        image = QImage(frame, 640, 480, QImage.Format_RGB888)
+        self.pix.setPixmap(QtGui.QPixmap.fromImage(image))
 
     @Slot()
     def on_btnscan_clicked(self):
