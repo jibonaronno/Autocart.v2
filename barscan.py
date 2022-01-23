@@ -41,6 +41,16 @@ class Camera(object):
         vid.release()
         return frame
 
+    def Barcode(self):
+        frame = self.capture()
+        barcodes = pyzbar.decode(frame)
+        if len(barcodes) > 0:
+            print("barcode found")
+        else:
+            print("barcode not found")
+        for barcode in barcodes:
+            pass
+
     def getBarcode(self, camPtr):
         frame = camPtr.read()
         if frame is not None:
