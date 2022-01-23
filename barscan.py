@@ -8,12 +8,35 @@ import time
 import cv2
 #from barcode import EAN13
 #from barcode.writer import ImageWriter
+from qtpy.QtCore import Signal, QThread, QObject
 
-class Camera(object):
+class Camera(QObject):
     global camPtr
     global vid
+    global img
+    signal = Signal(str)
     def __init__(self):
-        pass
+        self.vid = cv2.VideoCapture(0)
+        self.thread = QThread()
+        self.thread.started.connect(self.loop)
+        super().__init__()
+
+    def loop(self):
+        try:
+            while True:
+                _, frm = self.vid.read()
+                #frame = imutils.resize(frm, width=640)
+                #image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                #barcodes = pyzbar.decode(image)
+                #img = image
+                #self.signal.emit("cropp")
+                time.sleep(500)
+        except Exception as e:
+            print(str(e))
+
+    def startLoop(self):
+        self.moveToThread(self.thread)
+        self.thread.start()
 
     def start(self):
         try:
@@ -34,18 +57,16 @@ class Camera(object):
         vid.read()
         vid.read()
         ret, frame = vid.read()
-        vid.read()
-        vid.read()
-        vid.read()
-        vid.read()
+        frame = imutils.resize(frame, width=640)
+        image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         vid.release()
-        return frame
+        return image
 
     def Barcode(self):
         frame = self.capture()
         barcodes = pyzbar.decode(frame)
         if len(barcodes) > 0:
-            print("barcode found")
+            print("barcode found - " + str(len(barcodes)))
         else:
             print("barcode not found")
         for barcode in barcodes:

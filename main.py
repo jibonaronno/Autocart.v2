@@ -59,6 +59,7 @@ class Object(object):
     pass
 
 class MainWindow(QMainWindow, QWidget):
+    global img
     def __init__(self):
         QMainWindow.__init__(self)
         self.widget = uic.loadUi(_UI, self)
@@ -99,6 +100,7 @@ class MainWindow(QMainWindow, QWidget):
         self.loadcellTimer.setSingleShot(True)
 
         self.cam = Camera()
+        self.cam.signal.connect(self.on_cropp)
         #self.cam.start()
 
         '''
@@ -149,17 +151,23 @@ class MainWindow(QMainWindow, QWidget):
         elif te == 0:
             self.label02.setText("Token Does Not Exist : " + txt)
 
+    def on_cropp(self, stream):
+        print("cropped")
+
     @Slot()
     def on_btnscan_clicked(self):
         #stream = self.cam.start()
         #frame = self.cam.getBarcode(stream)
 
-
-        frame = self.cam.capture()
+        '''
+        #frame = self.cam.capture()
+        frame = img
         image = QImage(frame, 640, 480, QImage.Format_RGB888)
         self.pix.setPixmap(QtGui.QPixmap.fromImage(image))
-
         self.cam.Barcode()
+        '''
+
+        self.cam.startLoop()
 
     @Slot()
     def on_btnNextToken_clicked(self):
