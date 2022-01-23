@@ -44,6 +44,7 @@ from crud import CRUD
 from datetime import datetime
 from loadcell import LoadCell
 from barscan import Camera
+import imutils
 
 _UI = join(dirname(abspath(__file__)), 'mainwindow.ui')
 
@@ -155,7 +156,8 @@ class MainWindow(QMainWindow, QWidget):
         if stream != "":
             print(stream)
         frame = self.cam.img
-        image = QImage(frame, 1024, 768, QImage.Format_RGB888)
+        frame = imutils.resize(frame, width=320)
+        image = QImage(frame, 320, 240, QImage.Format_RGB888)
         self.pix.setPixmap(QtGui.QPixmap.fromImage(image))
 
     @Slot()
